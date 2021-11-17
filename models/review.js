@@ -6,7 +6,6 @@ module.exports = class Review extends Sequelize.Model{
             comment:{//리뷰 내용
                 type:Sequelize.STRING(15),
                 allowNull:true,
-                PrimaryKey:true,
             }
         },{
             sequelize,
