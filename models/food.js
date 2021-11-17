@@ -1,14 +1,14 @@
 const Sequelize = require('sequelize');
 
-module.exports = class User extends Sequelize.Model{
+module.exports = class Food extends Sequelize.Model{
     static init(sequelize){
         return super.init({
-            email:{
-                type:Sequelize.STRING(40),
+            name:{//음식 이름
+                type:Sequelize.STRING(15),
                 allowNull:true,
                 PrimaryKey:true,
             },
-            password:{
+            explanation:{
                 type:Sequelize.STRING(100),
                 allowNull:true,
             }
@@ -16,8 +16,8 @@ module.exports = class User extends Sequelize.Model{
             sequelize,
             timestamps:false,
             underscored:false,
-            modelName:'User',
-            tableName:'users',
+            modelName:'Food',
+            tableName:'foods',
             paranoid:false,
             charset:'utf8',
             collate:'utf8_general_ci',
