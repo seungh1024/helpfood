@@ -23,7 +23,6 @@ module.exports = class Hashtag extends Sequelize.Model{
         db.Hashtag.belongsToMany(db.Food,{
             through: 'FoodHashtag',
             foreignKey:'tag',
-            as:'hashtag',
             timestamps:false
         })
     }

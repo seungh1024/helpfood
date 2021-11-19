@@ -9,21 +9,21 @@ const myCache = new nodeCache({ stdTTL: 0, checkperiod: 900});
 
 module.exports = () => {
     passport.serializeUser((user,done) =>{
-        done(null,user.id);
+        done(null,user.email);
     });
 
-    passport.deserializeUser(async(id,done) =>{
-        const value = myCache.get(id);
-
+    passport.deserializeUser(async(email,done) =>{
+        const value = myCache.get(email);
+        
         if(value != null){
             done(null,JSON.parse(value));
         }else{
             try{
                 const user = await User.findOne({
-                    where:{id},
+                    where:{email},
                 });
-
-                const success = myCache.set(id,JSON.stringify(user.dataValues));
+                
+                const success = myCache.set(email,JSON.stringify(user.dataValues));
                 if(success){
                     done(null,user);
                 }else{

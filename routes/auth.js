@@ -44,7 +44,7 @@ router.post('/join',isNotLoggedIn,async(req,res,next)=>{
 });
 
 router.post('/login',isNotLoggedIn,(req,res,next)=>{
-    passport.authenticate('local',(authError,user,info)=>{
+    passport.authenticate('local',{session:false}, (authError,user,info)=>{
         if(authError){
             console.error(authError);
             return next(authError);
@@ -59,11 +59,11 @@ router.post('/login',isNotLoggedIn,(req,res,next)=>{
         return req.login(user,async(loginError)=>{
             if(loginError){
                 console.error(loginError);
-                next(loginError);
+                return next(loginError);
             }
-            res.json({
+            return res.json({
                 code:200,
-                user:user.email,
+                email:user.email,
                 message:'로그인 성공'
             });
         });

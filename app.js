@@ -9,16 +9,18 @@ const passport = require('passport');
 dotenv.config();
 
 const authRouter = require('./routes/auth');
+const foodRouter = require('./routes/food');
 
 const {sequelize}=require('./models');
 
-const passportConfig = require('./passport');
+const passportConfig = require('./passport/index');
 
 const app=express();
 passportConfig();
+
 app.set('port',process.env.PORT||8000);
 
-sequelize.sync({force:true})
+sequelize.sync({force:false})
     .then(()=>{
         console.log('데이터 베이스 연결 성공');
     })
@@ -44,6 +46,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/auth',authRouter);
+app.use('/food',foodRouter);
 
 app.use((req,res,next)=>{
     const error=new Error(`${req.method} ${req.url}라우터가 없습니다.`);
@@ -55,7 +58,7 @@ app.use((err,req,res,next)=>{
     res.locals.message=err.message;
     res.locals.error=process.env.NODE_ENV !=='production'? err:{};
     res.status(err.status||500);
-    res.render('error');
+    res.json({error:res.locals.message})
 });
 
 app.listen(app.get('port'),()=>{

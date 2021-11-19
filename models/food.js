@@ -8,10 +8,6 @@ module.exports = class Combination extends Sequelize.Model{
                 allowNull:true,
                 primaryKey:true,
             },
-            info:{//한줄 설명
-                type:Sequelize.STRING(100),
-                allowNull:true,
-            }
         },{
             sequelize,
             timestamps:false,
@@ -26,6 +22,7 @@ module.exports = class Combination extends Sequelize.Model{
     static associate(db){
         db.Food.belongsToMany(db.User,{
             through:'UserFood',
+            // as:'User',
             timestamps:false
         });
         db.Food.belongsToMany(db.Hashtag,{

@@ -26,6 +26,7 @@ module.exports = class User extends Sequelize.Model{
     static associate(db){
         db.User.belongsToMany(db.Food,{
             through:'UserFood',
+            // as:'Food',
             timestamps:false
         });
     }
