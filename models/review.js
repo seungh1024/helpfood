@@ -8,6 +8,10 @@ module.exports = class Review extends Sequelize.Model{
                 type:Sequelize.STRING(15),
                 allowNull:true,
             },
+            count:{
+                type:Sequelize.INTEGER,
+                allowNull:true
+            }
         },{
             sequelize,
             timestamps:false,

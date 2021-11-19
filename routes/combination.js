@@ -1,7 +1,7 @@
 const express = require('express');
 
 const {Combination,Review, Food,sequelize} = require('../models');
-
+const Sequelize = require('sequelize');
 const router = express.Router();
 
 router.post('/post',async(req,res,next)=>{
@@ -27,15 +27,36 @@ router.post('/post',async(req,res,next)=>{
                 side: req.body.side
             }
         });
-        console.log(combination);
 
         const datas = req.body.hashtags;
         
+        
         for(let data of datas){
-            await Review.create({
-                tag:data,
-                CombinationName:combination[0].name
-            })
+            const review = await Review.findOne({
+                where:{
+                    tag:data,
+                    CombinationName: combination[0].name
+                }
+            });
+            console.log('sex');
+            console.log(review);
+            if(review){
+                await Review.update({
+                    count:review.count+1
+                },{
+                    where:{
+                        tag:data,
+                        CombinationName:combination[0].name
+                    }
+                })
+            }else{
+                await Review.create({
+                    tag:data,
+                    count:0,
+                    CombinationName:combination[0].name
+                })
+            }
+            
         }
         
         res.json({
@@ -47,5 +68,35 @@ router.post('/post',async(req,res,next)=>{
         next(error);
     }
 });
+
+router.get('/:main/list',async(req,res,next)=>{
+    try{
+        const food = await Combination.findAll({
+            include:{
+                model:Review,
+                attributes:[
+                    'tag'
+                ],
+                order: 'count desc'
+                
+            },
+            attributes:['name'],
+            distinct:true,
+            where:{
+                main:req.params.main
+            }
+        });
+        
+        console.log(food);
+        
+        res.json({
+            code:200,
+            food
+        })
+    }catch(error){
+        console.error(error);
+        next(error);
+    }
+})
 
 module.exports = router;
