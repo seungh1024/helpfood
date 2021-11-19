@@ -28,6 +28,9 @@ module.exports = class Combination extends Sequelize.Model{
         })
     }
     static associate(db){
-
+        db.Combination.belongsToMany(db.Hash,{
+            through: 'ComHashtag',
+            timestamps:false
+        })
     }
 }
