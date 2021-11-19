@@ -6,7 +6,7 @@ module.exports = class User extends Sequelize.Model{
             email:{
                 type:Sequelize.STRING(40),
                 allowNull:true,
-                PrimaryKey:true,
+                primaryKey:true,
             },
             password:{
                 type:Sequelize.STRING(100),
@@ -24,6 +24,9 @@ module.exports = class User extends Sequelize.Model{
         })
     }
     static associate(db){
-        
+        db.User.belongsToMany(db.Food,{
+            through:'UserFood',
+            timestamps:false
+        });
     }
 }

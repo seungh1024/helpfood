@@ -3,10 +3,10 @@ const Sequelize = require('sequelize');
 module.exports = class Hashtag extends Sequelize.Model{
     static init(sequelize){
         return super.init({
-            title:{
+            tag:{
                 type:Sequelize.STRING(15),
                 allowNull:true,
-                PrimaryKey:true,
+                primaryKey:true,
             },
         },{
             sequelize,
@@ -20,6 +20,11 @@ module.exports = class Hashtag extends Sequelize.Model{
         })
     }
     static associate(db){
-        
+        db.Hashtag.belongsToMany(db.Food,{
+            through: 'FoodHashtag',
+            foreignKey:'tag',
+            as:'hashtag',
+            timestamps:false
+        })
     }
 }

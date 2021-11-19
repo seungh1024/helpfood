@@ -16,7 +16,7 @@ router.post('/join',isNotLoggedIn,async(req,res,next)=>{
         });
 
         if(exUser){
-            res.json({
+            return res.json({
                 code:401,
                 message: '이미 가입한 이메일 입니다'
             });
@@ -30,9 +30,9 @@ router.post('/join',isNotLoggedIn,async(req,res,next)=>{
         });
 
         if(user){
-            res.json({
+            return res.json({
                 code:200,
-                message: '회원 가입이 완료'
+                message: '회원 가입 완료'
             })
         }
         
@@ -55,7 +55,7 @@ router.post('/login',isNotLoggedIn,(req,res,next)=>{
                 message:`${info.message}`
             })
         }
-
+        
         return req.login(user,async(loginError)=>{
             if(loginError){
                 console.error(loginError);
@@ -63,6 +63,7 @@ router.post('/login',isNotLoggedIn,(req,res,next)=>{
             }
             res.json({
                 code:200,
+                user:user.email,
                 message:'로그인 성공'
             });
         });
