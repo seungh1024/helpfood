@@ -17,7 +17,6 @@ router.post('/choice',isLoggedIn,async(req,res,next)=>{
         });
 
         for(let food of req.body.foods){
-            console.log(food);
             await user.addFood(food);
         };
 
@@ -107,7 +106,31 @@ router.get('/:hashtag/taste',async(req,res,next)=>{
     }
 });
 
+router.post('/rechoice',isLoggedIn,async(req,res,next)=>{
+    try{
+        const user = await User.findOne({
+            where:{
+                email:req.user.email
+            }
+        });
+        const datas = await user.getFood();
 
+        for(let data of datas){
+            await user.removeFood(data);
+        };
+
+        for(let food of req.body.foods){
+            await user.addFood(food);
+        }
+        res.json({
+            code:200,
+            message:'취향 업데이트 성공'
+        })
+    }catch(error){
+        console.error(error);
+        next(error);
+    }
+})
 
 
 module.exports = router;
