@@ -32,11 +32,11 @@ router.post('/choice',verifyToken,async(req,res,next)=>{
 })
 
 //내가 선택한 메뉴 확인
-router.get('/my',verifyToken,async(req,res,next) => {
+router.get('/:email/my',async(req,res,next) => {
     try{
         const user = await User.findOne({
             where:{
-                email:req.user.email
+                email:req.params.email
             }
         });
         if(user){
@@ -48,7 +48,7 @@ router.get('/my',verifyToken,async(req,res,next) => {
             `select count(side) as count from combinations
              where main in 
              (select FoodName from UserFood 
-                where UserEmail = '${req.user.email}');`
+                where UserEmail = '${req.params.email}');`
             );
 
             res.json({
