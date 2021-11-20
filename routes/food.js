@@ -1,7 +1,7 @@
 const express =require('express');
 
 const {verifyToken} = require('./middlwares');
-const {User,Hashtag} = require('../models');
+const {User,Hashtag,Food} = require('../models');
 const { sequelize } = require('../models');
 const Op = sequelize.Op;
 
@@ -97,7 +97,7 @@ router.get('/:hashtag/taste',async(req,res,next)=>{
         const food = await hashtag.getFood();
         res.json({
             code:200,
-            food:food.map(i => i.name)
+            food:food
         });
     }catch(error){
         console.error(error);
@@ -124,6 +124,19 @@ router.post('/rechoice',verifyToken,async(req,res,next)=>{
         res.json({
             code:200,
             message:'취향 업데이트 성공'
+        })
+    }catch(error){
+        console.error(error);
+        next(error);
+    }
+});
+
+router.get('/',async(req,res,next)=>{
+    try{
+        const food = await Food.findAll({});
+        res.json({
+            code:200,
+            food
         })
     }catch(error){
         console.error(error);
