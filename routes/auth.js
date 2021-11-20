@@ -1,13 +1,13 @@
 const express = require('express');
 const passport = require('passport');
 const bcrypt =require('bcrypt');
-const {isLoggedIn, isNotLoggedIn} = require('./middlwares');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
 const router = express.Router();
 
-router.post('/join',isNotLoggedIn,async(req,res,next)=>{
+router.post('/join',async(req,res,next)=>{
     const {email,password} = req.body;
 
     try{
@@ -43,7 +43,7 @@ router.post('/join',isNotLoggedIn,async(req,res,next)=>{
     }
 });
 
-router.post('/login',isNotLoggedIn,(req,res,next)=>{
+router.post('/login',(req,res,next)=>{
     passport.authenticate('local', (authError,user,info)=>{
         if(authError){
             console.error(authError);
@@ -61,16 +61,23 @@ router.post('/login',isNotLoggedIn,(req,res,next)=>{
                 console.error(loginError);
                 return next(loginError);
             }
+            const token = jwt.sign({
+                email:user.email,
+            },process.env.JWT_SECRET,{
+                expiresIn:'60m',
+                issuer:'helpfood'
+            });
             return res.json({
                 code:200,
                 email:user.email,
+                token,
                 message:'로그인 성공'
             });
         });
     })(req,res,next);
 });
 
-router.get('/logout',isLoggedIn,(req,res)=>{
+router.get('/logout',(req,res)=>{
     req.logout();
     req.session.destroy();
     res.json({
