@@ -1,24 +1,30 @@
 const express = require('express');
 
-const {Combination} = require('../models');
+const {sequelize} = require('../models');
+
+const router = express.Router();
 
 router.get('/:main',async(req,res,next)=>{
     try{
-        const menu = await Combination.findAll({
-            where:{
-                main:req.params.main
-            }
-        });
+        const [result,metadata] = await sequelize.query(`
+            select foods.name as FoodName, 
+            combinations.name as ComFood
+            from foods, combinations 
+            where foods.name = '${req.params.main}' or
+            combinations.name = '%${req.params.main}%';
+        `);
+        
+        var list = result.map(r=>r.ComFood);
+        list.unshift(result[0].FoodName);
+        
         res.json({
             code:200,
-            list:menu.map(i=>i.side)
+            list:list
         })
     }catch(error){
         console.error(error);
         next(error);
     }
 })
-
-const router = express.Router();
 
 module.exports = router;

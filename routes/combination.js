@@ -87,12 +87,10 @@ router.get('/:main/list',async(req,res,next)=>{
             }
         });
         
-        console.log(food);
-        
         res.json({
             code:200,
             food
-        })
+        });
     }catch(error){
         console.error(error);
         next(error);

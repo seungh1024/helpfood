@@ -44,7 +44,7 @@ router.post('/join',isNotLoggedIn,async(req,res,next)=>{
 });
 
 router.post('/login',isNotLoggedIn,(req,res,next)=>{
-    passport.authenticate('local',{session:false}, (authError,user,info)=>{
+    passport.authenticate('local', (authError,user,info)=>{
         if(authError){
             console.error(authError);
             return next(authError);
