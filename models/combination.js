@@ -15,6 +15,10 @@ module.exports = class Combination extends Sequelize.Model{
             side:{//사이드 음식
                 type:Sequelize.STRING(15),
                 allowNull:true,
+            },
+            link:{
+                type:Sequelize.STRING(300),
+                allowNull:true,
             }
         },{
             sequelize,
