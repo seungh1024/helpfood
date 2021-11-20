@@ -10,7 +10,6 @@ const router = express.Router();
 //선호하는 메뉴 선택
 router.post('/choice',verifyToken,async(req,res,next)=>{
     try{
-        console.log(req.user);
         const user = await User.findOne({
             where:{
                 email:req.user.email
@@ -41,9 +40,8 @@ router.get('/my',verifyToken,async(req,res,next) => {
             }
         });
         if(user){
-            const food = await user.getFood({
-                attributes:['name']
-            });
+            const food = await user.getFood({});
+            console.log(food);
             const datas = food.map(i => i.name);
             
             const [result,metadata] = await sequelize.query(
@@ -55,7 +53,7 @@ router.get('/my',verifyToken,async(req,res,next) => {
 
             res.json({
                 code:200,
-                food:food.map(i=>i.name),
+                food:food,
                 count:food.length,
                 combination: result[0].count
             })

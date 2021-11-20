@@ -8,6 +8,10 @@ module.exports = class Combination extends Sequelize.Model{
                 allowNull:true,
                 primaryKey:true,
             },
+            link:{//음식 링크
+                type:Sequelize.STRING(200),
+                allowNull:true
+            }
         },{
             sequelize,
             timestamps:false,
